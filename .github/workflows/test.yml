@@ -1,0 +1,25 @@
+name: Test setup-gdrive
+on:
+  push:
+    paths:
+      - action.yml
+      - .github/workflows/test.yml
+      
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get Google service account file from secrets
+        id: google_service_account
+        uses: timheuer/base64-to-file@v1
+        with:
+          fileName: google_service_account.json
+          encodedString: ${{ secrets.GOOGLE_SERVICE_ACCOUNT }}
+          
+      - name: Setup gdrive using setup-gdrive
+        uses: AnimMouse/setup-gdrive@main
+        with:
+          service_account_file: ${{ steps.google_service_account.outputs.filePath }}
+          
+      - name: Test gdrive installed by setup-gdrive
+        run: gdrive about

@@ -1,0 +1,51 @@
+name: "Setup gdrive"
+description: "Setup/Install gdrive (Google Drive CLI Client) for GitHub Actions"
+branding:
+  icon: "upload-cloud"
+  color: "green"
+inputs:
+  service_account_file:
+    description: "Google service account JSON file"
+    required: true
+  version:
+    description: "Version of gdrive"
+    required: false
+    default: "2.1.1"
+    
+runs:
+  using: "composite"
+  steps:
+    - name: Download gdrive binaries
+      shell: bash
+      working-directory: /tmp
+      run: aria2c -x 16 "https://github.com/prasmussen/gdrive/releases/download/${{ inputs.version }}/gdrive_${{ inputs.version }}_linux_amd64.tar.gz"
+      
+    - name: Extract gdrive binaries
+      shell: bash
+      working-directory: /tmp
+      run: tar -xzf "gdrive_${{ inputs.version }}_linux_amd64.tar.gz"
+      
+    - name: Install gdrive on /usr/local/bin/
+      shell: bash
+      run: sudo mv /tmp/gdrive /usr/local/bin/
+      
+    - name: Get file name of service account JSON file
+      shell: bash
+      id: service_account_file_name
+      run: echo "::set-output name=file_name::$(basename ${{ inputs.service_account_file }})"
+      
+    - name: Alias gdrive with service account
+      shell: bash
+      run: alias gdrive="gdrive --service-account ${{ steps.service_account_file_name.outputs.file_name }}"
+      
+    - name: Sign in to Google Drive using service account JSON file
+      shell: bash
+      run: |
+        mkdir $HOME/.gdrive
+        mv -v ${{ inputs.service_account_file }} $HOME/.gdrive/
+        gdrive about --service-account ${{ steps.service_account_file_name.outputs.file_name }}
+        
+    - name: Clean up
+      shell: bash
+      working-directory: /tmp
+      run: sudo rm gdrive_${{ inputs.version }}_linux_amd64.tar.gz
