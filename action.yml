@@ -36,8 +36,10 @@ runs:
       
     - name: Alias gdrive with service account
       shell: bash
-      run: alias gdrive="gdrive --service-account ${{ steps.service_account_file_name.outputs.file_name }}"
-      
+      run: |
+        echo 'alias gdrive="gdrive --service-account ${{ steps.service_account_file_name.outputs.file_name }}"' >> ~/.bashrc
+        alias gdrive="gdrive --service-account ${{ steps.service_account_file_name.outputs.file_name }}"
+        
     - name: Sign in to Google Drive using service account JSON file
       shell: bash
       run: |
