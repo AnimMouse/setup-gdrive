@@ -4,13 +4,17 @@ branding:
   icon: "upload-cloud"
   color: "green"
 inputs:
-  service_account_file:
-    description: "Google service account JSON file"
+  service_account_file_path:
+    description: "Google service account JSON file path"
     required: true
   version:
     description: "Version of gdrive"
     required: false
     default: "2.1.1"
+outputs:
+  service_account_file_name: 
+    description: "Google service account JSON file name"
+    value: ${{ steps.service_account_file_name.outputs.file_name }}
     
 runs:
   using: "composite"
@@ -32,20 +36,14 @@ runs:
     - name: Get file name of service account JSON file
       shell: bash
       id: service_account_file_name
-      run: echo "::set-output name=file_name::$(basename ${{ inputs.service_account_file }})"
+      run: echo "::set-output name=file_name::$(basename ${{ inputs.service_account_file_path }})"
       
-    - name: Alias gdrive with service account
-      shell: bash
-      run: |
-        sudo echo 'alias gdrive="gdrive --service-account ${{ steps.service_account_file_name.outputs.file_name }}"' >> /etc/bash.bashrc
-        alias gdrive="gdrive --service-account ${{ steps.service_account_file_name.outputs.file_name }}"
-        
     - name: Sign in to Google Drive using service account JSON file
       shell: bash
       run: |
         mkdir $HOME/.gdrive
-        mv -v ${{ inputs.service_account_file }} $HOME/.gdrive/
-        gdrive about --service-account ${{ steps.service_account_file_name.outputs.file_name }}
+        mv -v ${{ inputs.service_account_file_path }} $HOME/.gdrive/
+        gdrive --service-account ${{ steps.service_account_file_name.outputs.file_name }} about
         
     - name: Clean up
       shell: bash
