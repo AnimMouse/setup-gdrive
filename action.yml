@@ -18,12 +18,12 @@ runs:
     - name: Download gdrive binaries
       shell: bash
       working-directory: /tmp
-      run: aria2c -x 16 "https://github.com/prasmussen/gdrive/releases/download/${{ inputs.version }}/gdrive_${{ inputs.version }}_linux_amd64.tar.gz"
+      run: aria2c -x 16 "https://github.com/prasmussen/gdrive/releases/download/${{ inputs.version }}/gdrive_${{ inputs.version }}_linux_386.tar.gz"
       
     - name: Extract gdrive binaries
       shell: bash
       working-directory: /tmp
-      run: tar -xzf "gdrive_${{ inputs.version }}_linux_amd64.tar.gz"
+      run: tar -xzf "gdrive_${{ inputs.version }}_linux_386.tar.gz"
       
     - name: Install gdrive on /usr/local/bin/
       shell: bash
@@ -48,4 +48,4 @@ runs:
     - name: Clean up
       shell: bash
       working-directory: /tmp
-      run: sudo rm gdrive_${{ inputs.version }}_linux_amd64.tar.gz
+      run: sudo rm gdrive_${{ inputs.version }}_linux_386.tar.gz
