@@ -40,16 +40,16 @@ steps:
     
   - name: Get Google service account file from secrets
     id: google_service_account
-    uses: timheuer/base64-to-file@v1
+    uses: timheuer/base64-to-file@v1.1
     with:
       fileName: google_service_account.json
-      encodedString: ${{ steps.google_service_account.outputs.filePath }}
+      encodedString: ${{ secrets.GOOGLE_SERVICE_ACCOUNT }}
       
   - name: Setup gdrive
     id: setup-gdrive
     uses: AnimMouse/setup-gdrive@v1
     with:
-      service_account_file_path: service-account-example.json
+      service_account_file_path: ${{ steps.google_service_account.outputs.filePath }}
       
   - run: gdrive --service-account ${{ steps.setup-gdrive.outputs.service_account_file_name }} about
 ```
