@@ -21,17 +21,17 @@ runs:
   steps:
     - name: Download gdrive binaries
       shell: bash
-      working-directory: /tmp
+      working-directory: ${{ runner.temp }}
       run: aria2c -x 16 "https://github.com/prasmussen/gdrive/releases/download/${{ inputs.version }}/gdrive_${{ inputs.version }}_linux_386.tar.gz"
       
     - name: Extract gdrive binaries
       shell: bash
-      working-directory: /tmp
+      working-directory: ${{ runner.temp }}
       run: tar -xzf "gdrive_${{ inputs.version }}_linux_386.tar.gz"
       
     - name: Install gdrive on /usr/local/bin/
       shell: bash
-      run: sudo mv /tmp/gdrive /usr/local/bin/
+      run: sudo mv $RUNNER_TEMP/gdrive /usr/local/bin/
       
     - name: Get file name of service account JSON file
       shell: bash
@@ -47,5 +47,5 @@ runs:
         
     - name: Clean up
       shell: bash
-      working-directory: /tmp
+      working-directory: ${{ runner.temp }}
       run: sudo rm gdrive_${{ inputs.version }}_linux_386.tar.gz

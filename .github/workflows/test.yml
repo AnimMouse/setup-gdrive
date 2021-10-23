@@ -11,7 +11,7 @@ jobs:
     steps:
       - name: Get Google service account file from secrets
         id: google_service_account
-        uses: timheuer/base64-to-file@v1
+        uses: timheuer/base64-to-file@v1.1
         with:
           fileName: google_service_account.json
           encodedString: ${{ secrets.GOOGLE_SERVICE_ACCOUNT }}
