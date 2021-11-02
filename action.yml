@@ -48,4 +48,4 @@ runs:
     - name: Clean up
       shell: bash
       working-directory: ${{ runner.temp }}
-      run: sudo rm gdrive_${{ inputs.version }}_linux_386.tar.gz
+      run: rm gdrive_${{ inputs.version }}_linux_386.tar.gz

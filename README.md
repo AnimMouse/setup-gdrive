@@ -12,9 +12,9 @@ This action only works on Ubuntu virtual environments as [conditionals](https://
 ## Usage
 To use `gdrive`, run this action before `gdrive`.
 
-Always add `--service-account ${{ steps.setup-gdrive.outputs.service_account_file_name }}` on `gdrive` so that the service account will be used, it will fail if you did not add that option.
+Always add `--service-account ${{ steps.gdrive.outputs.service_account_file_name }}` on `gdrive` so that the service account will be used, it will fail if you did not add that option.
 
-For `${{ steps.setup-gdrive.outputs.service_account_file_name }}` to work, you must add an `id:` syntax so that outputs will work.
+For `${{ steps.gdrive.outputs.service_account_file_name }}` to work, you must add an `id:` syntax so that outputs will work.
 
 For Google Service Account JSON key located on the repository or downloaded from somewhere (Do not use on public repositories!) place the file path on the `service_account_file_path` input.
 ```yml
@@ -22,12 +22,12 @@ steps:
   - uses: actions/checkout@v2
     
   - name: Setup gdrive
-    id: setup-gdrive
+    id: gdrive
     uses: AnimMouse/setup-gdrive@v1
     with:
       service_account_file_path: service-account-example.json
       
-  - run: gdrive --service-account ${{ steps.setup-gdrive.outputs.service_account_file_name }} about
+  - run: gdrive --service-account ${{ steps.gdrive.outputs.service_account_file_name }} about
 ```
 
 For public repositories, you can use Secrets to place the JSON key, encode the JSON key in base64 `base64 service-account-example.json` and paste the base64 string to Secrets.
@@ -46,10 +46,10 @@ steps:
       encodedString: ${{ secrets.GOOGLE_SERVICE_ACCOUNT }}
       
   - name: Setup gdrive
-    id: setup-gdrive
+    id: gdrive
     uses: AnimMouse/setup-gdrive@v1
     with:
       service_account_file_path: ${{ steps.google_service_account.outputs.filePath }}
       
-  - run: gdrive --service-account ${{ steps.setup-gdrive.outputs.service_account_file_name }} about
+  - run: gdrive --service-account ${{ steps.gdrive.outputs.service_account_file_name }} about
 ```

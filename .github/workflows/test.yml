@@ -17,10 +17,10 @@ jobs:
           encodedString: ${{ secrets.GOOGLE_SERVICE_ACCOUNT }}
           
       - name: Setup gdrive using setup-gdrive
-        id: setup-gdrive
+        id: gdrive
         uses: AnimMouse/setup-gdrive@main
         with:
           service_account_file_path: ${{ steps.google_service_account.outputs.filePath }}
           
       - name: Test gdrive installed by setup-gdrive
-        run: gdrive --service-account ${{ steps.setup-gdrive.outputs.service_account_file_name }} about
+        run: gdrive --service-account ${{ steps.gdrive.outputs.service_account_file_name }} about
