@@ -1,28 +1,24 @@
-name: "Setup gdrive"
-description: "Setup/Install gdrive (Google Drive CLI Client) for GitHub Actions"
+name: Setup gdrive
+description: Setup/Install gdrive (Google Drive CLI Client) for GitHub Actions
 branding:
-  icon: "upload-cloud"
-  color: "green"
+  icon: upload-cloud
+  color: green
 inputs:
-  service_account_file_path:
-    description: "Google service account JSON file path"
+  service_account:
+    description: Google service account JSON in base64
     required: true
   version:
-    description: "Version of gdrive"
+    description: Version of gdrive
     required: false
-    default: "2.1.1"
-outputs:
-  service_account_file_name: 
-    description: "Google service account JSON file name"
-    value: ${{ steps.service_account_file_name.outputs.file_name }}
+    default: '2.1.1'
     
 runs:
-  using: "composite"
+  using: composite
   steps:
     - name: Download gdrive binaries
       shell: bash
       working-directory: ${{ runner.temp }}
-      run: aria2c -x 16 "https://github.com/prasmussen/gdrive/releases/download/${{ inputs.version }}/gdrive_${{ inputs.version }}_linux_386.tar.gz"
+      run: aria2c -x 16 "https://github.com/prasmussen/gdrive/releases/download/${{ inputs.version }}/gdrive_${{ inputs.version }}_linux_386.tar.gz" # Issue 597
       
     - name: Extract gdrive binaries
       shell: bash
@@ -31,19 +27,16 @@ runs:
       
     - name: Install gdrive on /usr/local/bin/
       shell: bash
-      run: sudo mv $RUNNER_TEMP/gdrive /usr/local/bin/
-      
-    - name: Get file name of service account JSON file
-      shell: bash
-      id: service_account_file_name
-      run: echo "::set-output name=file_name::$(basename ${{ inputs.service_account_file_path }})"
+      run: mv $RUNNER_TEMP/gdrive /usr/local/bin/
       
     - name: Sign in to Google Drive using service account JSON file
       shell: bash
+      env:
+        service_account: ${{ inputs.service_account }}
       run: |
-        mkdir $HOME/.gdrive
-        mv -v ${{ inputs.service_account_file_path }} $HOME/.gdrive/
-        gdrive --service-account ${{ steps.service_account_file_name.outputs.file_name }} about
+        mkdir ~/.gdrive
+        echo $service_account | base64 -d > ~/.gdrive/gdrive.json
+        gdrive --service-account gdrive.json about
         
     - name: Clean up
       shell: bash
