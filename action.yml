@@ -10,7 +10,7 @@ inputs:
   version:
     description: Version of gdrive
     required: false
-    default: '2.1.1'
+    default: '2.1.2'
     
 runs:
   using: composite
@@ -18,7 +18,7 @@ runs:
     - name: Download gdrive binaries
       shell: bash
       working-directory: ${{ runner.temp }}
-      run: aria2c -x 16 "https://github.com/prasmussen/gdrive/releases/download/${{ inputs.version }}/gdrive_${{ inputs.version }}_linux_386.tar.gz" # Issue 597
+      run: aria2c -x 16 "https://github.com/trinvh/gdrive/releases/download/${{ inputs.version }}/gdrive_${{ inputs.version }}_linux_386.tar.gz" # Issue 597
       
     - name: Extract gdrive binaries
       shell: bash
