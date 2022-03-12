@@ -3,7 +3,9 @@ on:
   push:
     paths:
       - action.yml
-      - .github/workflows/test.yml
+      - .github/workflows/test.yaml
+    tags-ignore:
+      - v*
       
 jobs:
   test:

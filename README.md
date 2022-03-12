@@ -9,19 +9,20 @@ This action requires you to use a Google Service Account with a JSON key encoded
 
 Other virtual environments besides Ubuntu are not supported yet.
 
+## Deprecation
+This action is deprecated, please use [AnimMouse/setup-rclone](https://github.com/AnimMouse/setup-rclone) instead.
+
 ## Usage
 To use `gdrive`, run this action before `gdrive`.
 
 Always add `--service-account gdrive.json` on `gdrive` so that the service account will be used, it will fail if you did not add that option.
 
-Encode the JSON key in base64 using this command `base64 -w 0 service-account-example.json` and paste the base64 string to Secrets.
+Encode the JSON key in base64 using this command `base64 -w 0 service-account-example.json` and paste the base64 string to `GOOGLE_SERVICE_ACCOUNT` secret.
 
-```yml
+```yaml
 steps:
-  - uses: actions/checkout@v2
-    
   - name: Setup gdrive
-    uses: AnimMouse/setup-gdrive@v2
+    uses: AnimMouse/setup-gdrive@v3
     with:
       service_account: ${{ secrets.GOOGLE_SERVICE_ACCOUNT }}
       
